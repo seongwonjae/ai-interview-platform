@@ -16,7 +16,13 @@ public interface SubmissionRepository extends JpaRepository<InterviewSubmissionE
     // ✅ 세션의 최신 제출 1개 (권한 포함)
     Optional<InterviewSubmissionEntity> findTopBySession_IdAndSession_User_IdOrderByCreatedAtDesc(Long sessionId, Long userId);
     
-    
+    @Query("""
+    select s from InterviewSubmissionEntity s
+    join fetch s.question q
+    where s.id = :id
+    """)
+    Optional<InterviewSubmissionEntity> findByIdWithQuestion(@Param("id") Long id);
+
     // ✅ SessionController detail용 (question fetch join + 권한 포함)
     @Query("""
         select sub
